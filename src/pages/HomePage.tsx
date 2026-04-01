@@ -2,10 +2,34 @@
 import { Link } from 'react-router-dom'
 import type { Note } from '../lib/types'
 import { filterNotes } from '../features/search/service'
+import { isHttpUrl, toNavigableUrl } from '../lib/url'
 
 interface HomePageProps {
   notes: Note[]
   allTags: string[]
+}
+
+function SourceView({ source }: { source?: string }) {
+  if (!source?.trim()) {
+    return <span>无来源</span>
+  }
+
+  const trimmed = source.trim()
+  if (!isHttpUrl(trimmed)) {
+    return <span className="truncate">{trimmed}</span>
+  }
+
+  return (
+    <a
+      href={toNavigableUrl(trimmed)}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="max-w-[240px] truncate text-sky-700 underline-offset-2 hover:underline"
+      title={trimmed}
+    >
+      {trimmed}
+    </a>
+  )
 }
 
 export function HomePage({ notes, allTags }: HomePageProps) {
@@ -81,8 +105,8 @@ export function HomePage({ notes, allTags }: HomePageProps) {
           ) : null}
           {filteredNotes.map((note) => (
             <article key={note.id} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:shadow">
-              <div className="mb-2 flex items-center justify-between text-xs text-slate-500">
-                <span>{note.source || '无来源'}</span>
+              <div className="mb-2 flex items-center justify-between gap-4 text-xs text-slate-500">
+                <SourceView source={note.source} />
                 <span>{new Date(note.updatedAt).toLocaleString()}</span>
               </div>
               <h3 className="text-base font-semibold text-slate-900">

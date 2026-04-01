@@ -6,10 +6,34 @@ import { NoteForm } from '../components/NoteForm'
 import { deleteNote, saveAIResult, updateNote } from '../features/notes/service'
 import { summarizeNote } from '../features/ai/glm'
 import { getSettings } from '../features/settings/storage'
+import { isHttpUrl, toNavigableUrl } from '../lib/url'
 
 interface NoteDetailPageProps {
   notes: Note[]
   allTags: string[]
+}
+
+function SourceDetail({ source }: { source?: string }) {
+  if (!source?.trim()) {
+    return <span className="text-slate-500">无来源</span>
+  }
+
+  const trimmed = source.trim()
+  if (!isHttpUrl(trimmed)) {
+    return <span className="text-slate-700">{trimmed}</span>
+  }
+
+  return (
+    <a
+      href={toNavigableUrl(trimmed)}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-block max-w-full truncate text-sky-700 underline-offset-2 hover:underline"
+      title={trimmed}
+    >
+      {trimmed}
+    </a>
+  )
 }
 
 export function NoteDetailPage({ notes, allTags }: NoteDetailPageProps) {
@@ -111,6 +135,11 @@ export function NoteDetailPage({ notes, allTags }: NoteDetailPageProps) {
               返回列表
             </Link>
           </div>
+        </div>
+
+        <div className="mb-3 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm">
+          <span className="mr-2 font-medium text-slate-700">来源:</span>
+          <SourceDetail source={currentNote.source} />
         </div>
 
         <NoteForm draft={draft} allTags={allTags} onChange={setDraft} />
