@@ -1,17 +1,16 @@
 ﻿import { useState, type KeyboardEvent } from 'react'
-import type { Category, NoteDraft } from '../lib/types'
+import type { NoteDraft } from '../lib/types'
 import { emptyDraft } from '../lib/drafts'
 import { NoteForm } from './NoteForm'
 
 interface QuickCaptureProps {
   open: boolean
-  categories: Category[]
   allTags: string[]
   onClose: () => void
   onSubmit: (draft: NoteDraft) => Promise<void>
 }
 
-export function QuickCapture({ open, categories, allTags, onClose, onSubmit }: QuickCaptureProps) {
+export function QuickCapture({ open, allTags, onClose, onSubmit }: QuickCaptureProps) {
   const [draft, setDraft] = useState<NoteDraft>(emptyDraft)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
@@ -70,7 +69,7 @@ export function QuickCapture({ open, categories, allTags, onClose, onSubmit }: Q
             关闭
           </button>
         </div>
-        <NoteForm draft={draft} categories={categories} allTags={allTags} onChange={setDraft} compact />
+        <NoteForm draft={draft} allTags={allTags} onChange={setDraft} compact />
         {error ? <p className="mt-2 text-sm text-rose-600">{error}</p> : null}
         <div className="mt-4 flex justify-end gap-2">
           <button className="rounded border border-slate-300 px-3 py-2 text-sm" onClick={onClose}>

@@ -8,7 +8,6 @@ export interface Note {
   question: string
   freeContent: string
   mode: NoteMode
-  categoryId: string | null
   tags: string[]
   source?: string
   aiSummary?: string
@@ -17,16 +16,16 @@ export interface Note {
   aiCacheFingerprint?: string
 }
 
-export interface Category {
-  id: string
-  name: string
-  parentId: string | null
-  order: number
-}
-
 export interface ReviewCard {
   question: string
   answer: string
+}
+
+export interface ReviewCardsCache {
+  id: string
+  hash: string
+  createdAt: number
+  cards: ReviewCard[]
 }
 
 export interface AppSettings {
@@ -39,13 +38,11 @@ export interface NoteDraft {
   conclusion: string
   question: string
   freeContent: string
-  categoryId: string | null
   tags: string[]
   source: string
 }
 
 export interface NoteFilters {
   search: string
-  categoryId: string | null
   tags: string[]
 }

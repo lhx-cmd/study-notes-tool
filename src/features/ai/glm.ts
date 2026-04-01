@@ -106,19 +106,11 @@ export async function summarizeNote(note: Note, allNotes: Note[], apiKey: string
   }
 }
 
-const reviewCache = new Map<string, ReviewCard[]>()
-
 export async function generateReviewCards(
   notes: Note[],
   apiKey: string,
   model: string,
-  cacheKey: string,
 ): Promise<ReviewCard[]> {
-  const cached = reviewCache.get(cacheKey)
-  if (cached) {
-    return cached
-  }
-
   const compactNotes = notes.slice(0, 40).map((note) => ({
     id: note.id,
     text: note.mode === 'structured' ? `${note.conclusion}\n${note.question}` : note.freeContent,
@@ -142,7 +134,5 @@ export async function generateReviewCards(
   )
 
   const parsed = JSON.parse(extractJson(content)) as { cards?: ReviewCard[] }
-  const cards = (parsed.cards ?? []).filter((item) => item.question && item.answer)
-  reviewCache.set(cacheKey, cards)
-  return cards
+  return (parsed.cards ?? []).filter((item) => item.question && item.answer)
 }

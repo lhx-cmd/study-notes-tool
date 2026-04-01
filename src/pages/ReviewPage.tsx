@@ -1,8 +1,10 @@
-﻿import { useMemo, useState } from 'react'
+﻿import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import type { Note, ReviewCard } from '../lib/types'
 import { getSettings } from '../features/settings/storage'
 import { generateReviewCards } from '../features/ai/glm'
+import { buildNotesHash } from '../features/notes/utils'
+import { getReviewCardsByHash, saveReviewCards } from '../features/review/cache'
 
 interface ReviewPageProps {
   notes: Note[]
@@ -14,8 +16,30 @@ export function ReviewPage({ notes }: ReviewPageProps) {
   const [showAnswer, setShowAnswer] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [cacheLoaded, setCacheLoaded] = useState(false)
 
-  const cacheKey = useMemo(() => notes.map((note) => note.id).sort().join('|'), [notes])
+  const hash = useMemo(() => buildNotesHash(notes), [notes])
+
+  useEffect(() => {
+    let canceled = false
+
+    async function loadCachedCards() {
+      const cached = await getReviewCardsByHash(hash)
+      if (canceled) {
+        return
+      }
+
+      setCards(cached ?? [])
+      setIndex(0)
+      setShowAnswer(false)
+      setCacheLoaded(true)
+    }
+
+    void loadCachedCards()
+    return () => {
+      canceled = true
+    }
+  }, [hash])
 
   async function handleGenerate() {
     const settings = getSettings()
@@ -28,7 +52,8 @@ export function ReviewPage({ notes }: ReviewPageProps) {
     setError('')
 
     try {
-      const generated = await generateReviewCards(notes, settings.glmApiKey, settings.glmModel, cacheKey)
+      const generated = await generateReviewCards(notes, settings.glmApiKey, settings.glmModel)
+      await saveReviewCards(hash, generated)
       setCards(generated)
       setIndex(0)
       setShowAnswer(false)
@@ -50,14 +75,16 @@ export function ReviewPage({ notes }: ReviewPageProps) {
             返回
           </Link>
         </div>
-        <p className="mt-2 text-sm text-slate-600">基于当前所有笔记生成问答卡片，支持逐张翻阅。</p>
+        <p className="mt-2 text-sm text-slate-600">复习卡会缓存到本地数据库，刷新或重开浏览器也会保留。</p>
         <button
           className="mt-3 rounded bg-slate-900 px-4 py-2 text-sm text-white disabled:cursor-not-allowed disabled:bg-slate-400"
           onClick={() => void handleGenerate()}
           disabled={loading || notes.length === 0}
         >
-          {loading ? '生成中...' : '生成复习卡'}
+          {loading ? '生成中...' : cards.length > 0 ? '重新生成复习卡' : '生成复习卡'}
         </button>
+        {!cacheLoaded ? <p className="mt-2 text-sm text-slate-500">正在读取缓存...</p> : null}
+        {cacheLoaded && cards.length > 0 ? <p className="mt-2 text-sm text-emerald-700">已加载本地缓存复习卡。</p> : null}
         {notes.length === 0 ? <p className="mt-2 text-sm text-slate-500">暂无笔记可生成卡片。</p> : null}
         {error ? <p className="mt-2 text-sm text-rose-600">{error}</p> : null}
       </div>

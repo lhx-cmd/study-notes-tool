@@ -5,7 +5,6 @@ export const emptyDraft: NoteDraft = {
   conclusion: '',
   question: '',
   freeContent: '',
-  categoryId: null,
   tags: [],
   source: '',
 }
@@ -16,7 +15,6 @@ export function noteToDraft(note: Note): NoteDraft {
     conclusion: note.conclusion,
     question: note.question,
     freeContent: note.freeContent,
-    categoryId: note.categoryId,
     tags: note.tags,
     source: note.source ?? '',
   }

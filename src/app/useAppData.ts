@@ -4,7 +4,6 @@ import { db } from '../db/db'
 
 export function useAppData() {
   const notes = useLiveQuery(() => db.notes.toArray(), [], [])
-  const categories = useLiveQuery(() => db.categories.toArray(), [], [])
 
   const allTags = useMemo(() => {
     const set = new Set<string>()
@@ -17,8 +16,7 @@ export function useAppData() {
 
   return {
     notes: notes ?? [],
-    categories: categories ?? [],
     allTags,
-    loading: !notes || !categories,
+    loading: !notes,
   }
 }

@@ -38,7 +38,6 @@ export function createNoteFromDraft(draft: NoteDraft): Note {
     conclusion: normalized.mode === 'structured' ? normalized.conclusion.trim() : '',
     question: normalized.mode === 'structured' ? normalized.question.trim() : '',
     freeContent: normalized.mode === 'free' ? normalized.freeContent.trim() : '',
-    categoryId: normalized.categoryId,
     tags: normalized.tags,
     source: normalized.source.trim() || undefined,
     aiSummary: undefined,
@@ -56,7 +55,6 @@ export function patchNoteWithDraft(existing: Note, draft: NoteDraft): Note {
     conclusion: draft.mode === 'structured' ? draft.conclusion.trim() : '',
     question: draft.mode === 'structured' ? draft.question.trim() : '',
     freeContent: draft.mode === 'free' ? draft.freeContent.trim() : '',
-    categoryId: draft.categoryId,
     tags: normalizedTags,
     source: draft.source.trim() || undefined,
     updatedAt: Date.now(),
@@ -78,10 +76,6 @@ export function patchNoteWithDraft(existing: Note, draft: NoteDraft): Note {
 export function matchFilters(notes: Note[], filters: NoteFilters): Note[] {
   let filtered = notes
 
-  if (filters.categoryId) {
-    filtered = filtered.filter((note) => note.categoryId === filters.categoryId)
-  }
-
   if (filters.tags.length > 0) {
     filtered = filtered.filter((note) =>
       filters.tags.every((tag) => note.tags.includes(tag.toLowerCase())),
@@ -102,16 +96,6 @@ export function matchFilters(notes: Note[], filters: NoteFilters): Note[] {
   return filtered.sort((a, b) => b.updatedAt - a.updatedAt)
 }
 
-export function highlightText(text: string, query: string): string {
-  if (!query.trim()) {
-    return text
-  }
-
-  const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-  const regex = new RegExp(`(${escaped})`, 'ig')
-  return text.replace(regex, '<mark>$1</mark>')
-}
-
 export function parseTagInput(input: string): string[] {
   return normalizeTags(
     input
@@ -119,4 +103,11 @@ export function parseTagInput(input: string): string[] {
       .map((piece) => piece.trim())
       .filter(Boolean),
   )
+}
+
+export function buildNotesHash(notes: Note[]): string {
+  return notes
+    .map((note) => `${note.id}:${note.updatedAt}:${note.aiCacheFingerprint ?? ''}`)
+    .sort()
+    .join('|')
 }

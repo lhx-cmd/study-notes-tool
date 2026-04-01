@@ -1,23 +1,21 @@
-﻿import type { Category, Note } from '../../lib/types'
-import { findCategoryPath } from '../categories/service'
+﻿import type { Note } from '../../lib/types'
 
 function escapeMarkdown(value: string): string {
   return value.replace(/[\\`*_{}[\]()#+\-.!|]/g, '\\$&')
 }
 
-export function exportJson(notes: Note[], categories: Category[]): string {
+export function exportJson(notes: Note[]): string {
   return JSON.stringify(
     {
       exportedAt: new Date().toISOString(),
       notes,
-      categories,
     },
     null,
     2,
   )
 }
 
-export function exportMarkdown(notes: Note[], categories: Category[]): string {
+export function exportMarkdown(notes: Note[]): string {
   const sorted = [...notes].sort((a, b) => b.updatedAt - a.updatedAt)
 
   return sorted
@@ -30,7 +28,6 @@ export function exportMarkdown(notes: Note[], categories: Category[]): string {
       const meta = [
         `- 创建时间: ${new Date(note.createdAt).toLocaleString()}`,
         `- 更新时间: ${new Date(note.updatedAt).toLocaleString()}`,
-        `- 分类: ${findCategoryPath(note.categoryId, categories)}`,
         `- 标签: ${note.tags.length > 0 ? note.tags.map((tag: string) => `#${tag}`).join(' ') : '无'}`,
         `- 来源: ${note.source ?? '无'}`,
       ].join('\n')

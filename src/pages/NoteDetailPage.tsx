@@ -1,6 +1,6 @@
 ﻿import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import type { Category, Note } from '../lib/types'
+import type { Note } from '../lib/types'
 import { noteToDraft } from '../lib/drafts'
 import { NoteForm } from '../components/NoteForm'
 import { deleteNote, saveAIResult, updateNote } from '../features/notes/service'
@@ -9,11 +9,10 @@ import { getSettings } from '../features/settings/storage'
 
 interface NoteDetailPageProps {
   notes: Note[]
-  categories: Category[]
   allTags: string[]
 }
 
-export function NoteDetailPage({ notes, categories, allTags }: NoteDetailPageProps) {
+export function NoteDetailPage({ notes, allTags }: NoteDetailPageProps) {
   const params = useParams()
   const navigate = useNavigate()
   const note = notes.find((item) => item.id === params.noteId)
@@ -114,7 +113,7 @@ export function NoteDetailPage({ notes, categories, allTags }: NoteDetailPagePro
           </div>
         </div>
 
-        <NoteForm draft={draft} categories={categories} allTags={allTags} onChange={setDraft} />
+        <NoteForm draft={draft} allTags={allTags} onChange={setDraft} />
 
         <div className="mt-3 flex items-center gap-2">
           <button
@@ -177,4 +176,3 @@ export function NoteDetailPage({ notes, categories, allTags }: NoteDetailPagePro
     </div>
   )
 }
-

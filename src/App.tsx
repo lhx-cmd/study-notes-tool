@@ -10,7 +10,7 @@ import { ReviewPage } from './pages/ReviewPage'
 import { SettingsPage } from './pages/SettingsPage'
 
 function App() {
-  const { notes, categories, allTags, loading } = useAppData()
+  const { notes, allTags, loading } = useAppData()
   const [quickCaptureOpen, setQuickCaptureOpen] = useState(false)
   const location = useLocation()
 
@@ -68,17 +68,16 @@ function App() {
         {loading ? <p className="rounded bg-white p-4 text-sm text-slate-600">数据加载中...</p> : null}
         {!loading ? (
           <Routes>
-            <Route path="/" element={<HomePage notes={notes} categories={categories} allTags={allTags} />} />
-            <Route path="/note/:noteId" element={<NoteDetailPage notes={notes} categories={categories} allTags={allTags} />} />
+            <Route path="/" element={<HomePage notes={notes} allTags={allTags} />} />
+            <Route path="/note/:noteId" element={<NoteDetailPage notes={notes} allTags={allTags} />} />
             <Route path="/review" element={<ReviewPage notes={notes} />} />
-            <Route path="/settings" element={<SettingsPage notes={notes} categories={categories} />} />
+            <Route path="/settings" element={<SettingsPage notes={notes} />} />
           </Routes>
         ) : null}
       </main>
 
       <QuickCapture
         open={quickCaptureOpen}
-        categories={categories}
         allTags={allTags}
         onClose={() => setQuickCaptureOpen(false)}
         onSubmit={handleQuickSubmit}

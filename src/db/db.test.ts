@@ -8,7 +8,7 @@ class TestDB extends Dexie {
 
   constructor() {
     super('test-db')
-    this.version(1).stores({ notes: 'id, updatedAt, categoryId, *tags' })
+    this.version(1).stores({ notes: 'id, updatedAt, *tags' })
   }
 }
 
@@ -33,7 +33,6 @@ describe('dexie note ops', () => {
       question: 'q',
       freeContent: '',
       mode: 'structured',
-      categoryId: null,
       tags: ['rag'],
       source: 'src',
     }

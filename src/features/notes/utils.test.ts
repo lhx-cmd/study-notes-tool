@@ -7,7 +7,6 @@ const baseDraft: NoteDraft = {
   conclusion: 'RAG 的关键是检索质量',
   question: '如何降低幻觉?',
   freeContent: '',
-  categoryId: null,
   tags: ['RAG', 'LLM'],
   source: 'paper',
 }
@@ -43,7 +42,6 @@ describe('notes utils', () => {
 
     const result = matchFilters([one, two], {
       search: '推荐',
-      categoryId: null,
       tags: ['gcn'],
     })
 
