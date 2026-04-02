@@ -31,41 +31,29 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-100 text-slate-900">
-      <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/95 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-2 px-4 py-3">
-          <h1 className="text-lg font-bold tracking-tight">学习心得整理工具</h1>
-          <nav className="ml-auto flex items-center gap-2 text-sm">
-            <Link
-              to="/"
-              className={`rounded px-3 py-1.5 ${location.pathname === '/' ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-100'}`}
-            >
+    <div className="app-shell">
+      <header className="app-header">
+        <div className="app-header-inner">
+          <h1 className="app-title">学习心得整理工具</h1>
+          <nav className="ml-auto flex items-center gap-1.5 md:gap-2">
+            <Link to="/" className={`nav-link ${location.pathname === '/' ? 'nav-link-active' : ''}`}>
               笔记
             </Link>
-            <Link
-              to="/review"
-              className={`rounded px-3 py-1.5 ${location.pathname === '/review' ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-100'}`}
-            >
+            <Link to="/review" className={`nav-link ${location.pathname === '/review' ? 'nav-link-active' : ''}`}>
               复习
             </Link>
-            <Link
-              to="/settings"
-              className={`rounded px-3 py-1.5 ${location.pathname === '/settings' ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-100'}`}
-            >
+            <Link to="/settings" className={`nav-link ${location.pathname === '/settings' ? 'nav-link-active' : ''}`}>
               设置
             </Link>
-            <button
-              className="rounded bg-slate-900 px-3 py-1.5 font-medium text-white"
-              onClick={() => setQuickCaptureOpen(true)}
-            >
+            <button className="btn-primary" onClick={() => setQuickCaptureOpen(true)}>
               快速录入
             </button>
           </nav>
         </div>
       </header>
 
-      <main className="mx-auto max-w-7xl p-4 md:p-6">
-        {loading ? <p className="rounded bg-white p-4 text-sm text-slate-600">数据加载中...</p> : null}
+      <main className="main-wrap">
+        {loading ? <p className="surface p-4 text-sm hint">数据加载中...</p> : null}
         {!loading ? (
           <Routes>
             <Route path="/" element={<HomePage notes={notes} allTags={allTags} />} />

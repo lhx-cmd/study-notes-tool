@@ -61,25 +61,27 @@ export function QuickCapture({ open, allTags, onClose, onSubmit }: QuickCaptureP
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center bg-slate-950/45 px-3 py-8" onKeyDown={onKeyDown}>
-      <div className="w-full max-w-3xl rounded-xl bg-white p-4 shadow-2xl md:p-6">
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-slate-900">快速录入（Ctrl/Cmd + K）</h2>
-          <button className="rounded border border-slate-300 px-2 py-1 text-sm" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-start justify-center bg-slate-950/40 px-3 py-8 md:py-12" onKeyDown={onKeyDown}>
+      <div className="surface w-full max-w-4xl p-4 md:p-6" style={{ boxShadow: 'var(--shadow-md)' }}>
+        <div className="mb-4 flex items-center justify-between border-b border-slate-200 pb-3">
+          <div>
+            <h2 className="section-title">快速录入</h2>
+            <p className="hint-xs mt-1">Ctrl/Cmd + K 呼出，Ctrl/Cmd + Enter 保存</p>
+          </div>
+          <button className="btn-ghost" onClick={onClose}>
             关闭
           </button>
         </div>
+
         <NoteForm draft={draft} allTags={allTags} onChange={setDraft} compact />
-        {error ? <p className="mt-2 text-sm text-rose-600">{error}</p> : null}
-        <div className="mt-4 flex justify-end gap-2">
-          <button className="rounded border border-slate-300 px-3 py-2 text-sm" onClick={onClose}>
+
+        {error ? <p className="status-error mt-3">{error}</p> : null}
+
+        <div className="mt-5 flex justify-end gap-2">
+          <button className="btn-secondary" onClick={onClose}>
             取消
           </button>
-          <button
-            className="rounded bg-slate-900 px-4 py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:bg-slate-400"
-            disabled={saving}
-            onClick={() => void handleSubmit()}
-          >
+          <button className="btn-primary" disabled={saving} onClick={() => void handleSubmit()}>
             {saving ? '保存中...' : '保存'}
           </button>
         </div>

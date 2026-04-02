@@ -67,41 +67,37 @@ export function ReviewPage({ notes }: ReviewPageProps) {
   const current = cards[index]
 
   return (
-    <section className="mx-auto max-w-3xl space-y-4">
-      <div className="rounded-xl border border-slate-200 bg-white p-5">
+    <section className="mx-auto max-w-4xl space-y-4">
+      <div className="surface p-5 md:p-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-slate-900">复习模式</h2>
-          <Link to="/" className="rounded border border-slate-300 px-3 py-1 text-sm text-slate-700">
+          <h2 className="section-title">复习模式</h2>
+          <Link to="/" className="btn-secondary">
             返回
           </Link>
         </div>
-        <p className="mt-2 text-sm text-slate-600">复习卡会缓存到本地数据库，刷新或重开浏览器也会保留。</p>
-        <button
-          className="mt-3 rounded bg-slate-900 px-4 py-2 text-sm text-white disabled:cursor-not-allowed disabled:bg-slate-400"
-          onClick={() => void handleGenerate()}
-          disabled={loading || notes.length === 0}
-        >
+        <p className="hint mt-2">复习卡会缓存到本地数据库，刷新或重开浏览器也会保留。</p>
+        <button className="btn-primary mt-3" onClick={() => void handleGenerate()} disabled={loading || notes.length === 0}>
           {loading ? '生成中...' : cards.length > 0 ? '重新生成复习卡' : '生成复习卡'}
         </button>
-        {!cacheLoaded ? <p className="mt-2 text-sm text-slate-500">正在读取缓存...</p> : null}
-        {cacheLoaded && cards.length > 0 ? <p className="mt-2 text-sm text-emerald-700">已加载本地缓存复习卡。</p> : null}
-        {notes.length === 0 ? <p className="mt-2 text-sm text-slate-500">暂无笔记可生成卡片。</p> : null}
-        {error ? <p className="mt-2 text-sm text-rose-600">{error}</p> : null}
+        {!cacheLoaded ? <p className="hint mt-2">正在读取缓存...</p> : null}
+        {cacheLoaded && cards.length > 0 ? <p className="status-ok mt-2">已加载本地缓存复习卡。</p> : null}
+        {notes.length === 0 ? <p className="hint mt-2">暂无笔记可生成卡片。</p> : null}
+        {error ? <p className="status-error mt-2">{error}</p> : null}
       </div>
 
       {current ? (
-        <article className="rounded-xl border border-slate-200 bg-white p-6 shadow">
-          <div className="mb-4 text-xs text-slate-500">
+        <article className="surface p-6 md:p-8" style={{ boxShadow: 'var(--shadow-md)' }}>
+          <div className="hint-xs mb-3">
             第 {index + 1} / {cards.length} 张
           </div>
-          <h3 className="text-xl font-semibold text-slate-900">{current.question}</h3>
-          {showAnswer ? <p className="mt-3 rounded bg-slate-100 p-3 text-sm text-slate-700">{current.answer}</p> : null}
-          <div className="mt-4 flex flex-wrap gap-2">
-            <button className="rounded border border-slate-300 px-3 py-2 text-sm" onClick={() => setShowAnswer((prev) => !prev)}>
+          <h3 className="text-2xl font-semibold tracking-tight text-slate-900">{current.question}</h3>
+          {showAnswer ? <p className="surface-muted mt-4 p-4 text-sm hint">{current.answer}</p> : null}
+          <div className="mt-5 flex flex-wrap gap-2">
+            <button className="btn-primary" onClick={() => setShowAnswer((prev) => !prev)}>
               {showAnswer ? '隐藏答案' : '显示答案'}
             </button>
             <button
-              className="rounded border border-slate-300 px-3 py-2 text-sm"
+              className="btn-secondary"
               disabled={index === 0}
               onClick={() => {
                 setIndex((prev) => Math.max(prev - 1, 0))
@@ -111,7 +107,7 @@ export function ReviewPage({ notes }: ReviewPageProps) {
               上一张
             </button>
             <button
-              className="rounded border border-slate-300 px-3 py-2 text-sm"
+              className="btn-secondary"
               disabled={index >= cards.length - 1}
               onClick={() => {
                 setIndex((prev) => Math.min(prev + 1, cards.length - 1))

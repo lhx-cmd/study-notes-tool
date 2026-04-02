@@ -6,11 +6,12 @@
 
 - 快速录入：`Ctrl/Cmd + K` 呼出输入面板
 - 双编辑模式：结构化（结论/疑问）与自由 Markdown（CodeMirror）
-- 分类与标签：分类树浏览、标签过滤、分类管理与排序
+- 标签管理：标签录入、标签筛选（分类功能已移除）
 - 全文搜索：Fuse.js 模糊检索
 - AI 增强：GLM 提炼摘要/关键词/关联推荐，复习卡片生成
 - 本地持久化：IndexedDB（Dexie）
 - 导出：JSON 与 Markdown
+- 来源 URL 点击跳转：`http/https` 在列表和详情页可新标签页打开
 
 ## 本地运行
 
@@ -35,3 +36,10 @@ npm run build
 3. 默认模型是 `glm-5`，如需可改为你账户可用的模型名。
 
 > 说明：本项目无后端代理，API Key 仅保存在浏览器 `localStorage`。
+
+## 项目文档
+
+- 架构总览：`docs/architecture/overview.md`
+- 关键决策：`docs/decisions/`
+- 当前进度：`docs/status/current-status.md`
+- 发布手册：`docs/runbook/deploy-github-pages.md`
